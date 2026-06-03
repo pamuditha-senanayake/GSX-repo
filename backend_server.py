@@ -4,6 +4,20 @@ import os
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploaded_files'
 
+@app.before_request
+def handle_options():
+    # Handle OPTIONS preflight requests.
+    if request.method == 'OPTIONS':
+        return app.make_default_options_response()
+
+@app.after_request
+def add_cors_headers(response):
+    # Add CORS headers to all responses.
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Allow-Headers'] = '*'
+    response.headers['Access-Control-Allow-Methods'] = '*'
+    return response
+
 # Simple in-memory command queue
 scan_pending = False
 
